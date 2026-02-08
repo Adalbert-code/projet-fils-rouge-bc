@@ -106,7 +106,8 @@ pipeline {
             steps {
                 ansiblePlaybook(
                     playbook: 'ansible/deploy.yml',
-                    inventory: 'ansible/hosts'
+                    inventory: 'ansible/hosts',
+                    extras: '--vault-password-file=.vault_pass'
                 )
             }
         }

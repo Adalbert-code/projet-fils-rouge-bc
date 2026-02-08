@@ -8,7 +8,13 @@ pgadmin_mount_path: "/var/lib/pgadmin"
 pgadmin_service_name: "pgadmin_app"
 pgadmin_container_name: "ic_pgadmin"
 pgadmin_email: "admin@icgroup.com"
-pgadmin_password: "admin_password"
+pgadmin_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66653638626335626362333938633334373765653935346566323262613935613866653637393866
+          3765613339633337333739373335643537343366393061650a343434633239643935663039663632
+          37396430363738373734613439363635643762653738353439373932613939623937643437653938
+          3936386634643237650a323932336561643834663232663437636437613765663639343264653866
+          3739
 # Hôte de la base de données Odoo (à adapter selon votre infrastructure)
 # Odoo database host (adapt according to your infrastructure)
 odoo_db_host: "odoo_db"  # Nom du conteneur ou IP du serveur Odoo

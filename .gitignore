@@ -1,0 +1,4 @@
+.vault_pass
+*.pyc
+__pycache__/
+.DS_Store
