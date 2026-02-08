@@ -33,6 +33,31 @@ spec:
             secretKeyRef:
               name: icgroup-secrets
               key: postgres-password
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /web/database/selector
+            port: 8069
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /web/database/selector
+            port: 8069
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 2
+        # Resource limits
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
 ---
 # Ressource C : Service pour Odoo (ClusterIP)
 # Resource C: Odoo service (ClusterIP)

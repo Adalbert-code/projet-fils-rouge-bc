@@ -29,6 +29,31 @@ spec:
           value: "http://odoo-service.icgroup.svc.cluster.local:8069"
         - name: PGADMIN_URL
           value: "http://pgadmin-service.icgroup.svc.cluster.local:80"
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        # Resource limits
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
 ---
 # Ressource A : Service pour l'application vitrine (NodePort/LoadBalancer)
 # Resource A: Showcase application service (NodePort/LoadBalancer)

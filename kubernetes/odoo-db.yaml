@@ -50,6 +50,14 @@ spec:
         volumeMounts:
         - name: odoo-db-storage
           mountPath: /var/lib/postgresql/data
+        # Resource limits
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
       volumes:
       - name: odoo-db-storage
         persistentVolumeClaim:

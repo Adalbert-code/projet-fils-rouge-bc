@@ -9,3 +9,6 @@ pgadmin_service_name: "pgadmin_app"
 pgadmin_container_name: "ic_pgadmin"
 pgadmin_email: "admin@icgroup.com"
 pgadmin_password: "admin_password"
+# Hôte de la base de données Odoo (à adapter selon votre infrastructure)
+# Odoo database host (adapt according to your infrastructure)
+odoo_db_host: "odoo_db"  # Nom du conteneur ou IP du serveur Odoo

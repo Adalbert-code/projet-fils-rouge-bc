@@ -1,6 +1,6 @@
-# Utiliser l'image de base officielle Python 3.6 Alpine (légère) 
-# Use the official Python 3.6 Alpine base image (lightweight)
-FROM python:3.6-alpine
+# Utiliser l'image de base officielle Python 3.9 Alpine (légère) 
+# Use the official Python 3.9 Alpine base image (lightweight)
+FROM python:3.9-alpine
 
 # Définir le répertoire de travail à /opt
 # Set the working directory to /opt
@@ -10,9 +10,10 @@ WORKDIR /opt
 # Copy the application files into the container
 COPY . /opt/
 
-# Installer le module Flask à l'aide de pip
-# Install the Flask module using pip
-RUN pip install flask
+# Copier et installer les dépendances depuis requirements.txt
+# Copy and install dependencies from requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Donner les droits d'exécution au script
 # Grant execution rights to the script
