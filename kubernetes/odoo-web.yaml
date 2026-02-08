@@ -1,0 +1,54 @@
+# Ressource D : Déploiement de l'application Odoo (2 Réplicas)
+# Resource D: Odoo application deployment (2 Replicas)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-web
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: odoo-web
+  template:
+    metadata:
+      labels:
+        app: odoo-web
+        env: prod
+    spec:
+      containers:
+      - name: odoo
+        image: odoo:13.0
+        ports:
+        - containerPort: 8069
+        env:
+        - name: HOST
+          value: odoo-db-service
+        - name: USER
+          value: odoo
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: icgroup-secrets
+              key: postgres-password
+---
+# Ressource C : Service pour Odoo (ClusterIP)
+# Resource C: Odoo service (ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: odoo-web
+  ports:
+  - protocol: TCP
+    port: 8069
+    targetPort: 8069
+    nodePort: 30069
+  type: NodePort

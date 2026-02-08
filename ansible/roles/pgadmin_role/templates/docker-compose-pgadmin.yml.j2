@@ -1,0 +1,32 @@
+version: '3.5'
+
+# Définition du service pgAdmin
+# Definition of pgAdmin service
+
+services:
+  {{ pgadmin_service_name }}:
+    image: dpage/pgadmin4
+    container_name: {{ pgadmin_container_name }}
+    environment:
+      - PGADMIN_DEFAULT_EMAIL={{ pgadmin_email }}
+      - PGADMIN_DEFAULT_PASSWORD={{ pgadmin_password }}
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    volumes:
+      - {{ pgadmin_volume }}:/var/lib/pgadmin
+      - /opt/servers.json:/pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    networks:
+      - {{ pgadmin_network }}
+
+networks:
+  {{ pgadmin_network }}:
+    driver: bridge
+
+volumes:
+  {{ pgadmin_volume }}:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '{{ pgadmin_mount_path }}'

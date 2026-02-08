@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: odoo-db-pvc
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Ressource F : Déploiement de la base de données PostgreSQL
+# Resource F: PostgreSQL database deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-db
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odoo-db
+  template:
+    metadata:
+      labels:
+        app: odoo-db
+        env: prod
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:10
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: odoo
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: icgroup-secrets
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: postgres
+        volumeMounts:
+        - name: odoo-db-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: odoo-db-storage
+        persistentVolumeClaim:
+          claimName: odoo-db-pvc
+---
+# Ressource E : Service pour la base de données (ClusterIP)
+# Resource E: Database service (ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo-db-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: odoo-db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP

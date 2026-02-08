@@ -1,0 +1,17 @@
+---
+# Tâches pour installer l'application vitrine
+# Tasks to install the showcase web application
+
+- name: Copier le template docker-compose webapp
+  # Copy the webapp docker-compose template
+  template:
+    src: docker-compose-webapp.yml.j2
+    dest: "/opt/webapp_compose.yml"
+
+- name: Déployer l'application vitrine avec Docker Compose
+  # Deploy the showcase app with Docker Compose
+  docker_compose:
+    project_src: /opt
+    files:
+      - "webapp_compose.yml"
+    state: present

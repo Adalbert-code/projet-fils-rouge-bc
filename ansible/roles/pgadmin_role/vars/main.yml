@@ -1,0 +1,11 @@
+---
+# Variables variabilisées pour pgAdmin
+# Variabilized variables for pgAdmin
+
+pgadmin_network: "pgadmin_network"
+pgadmin_volume: "pgadmin_data"
+pgadmin_mount_path: "/var/lib/pgadmin"
+pgadmin_service_name: "pgadmin_app"
+pgadmin_container_name: "ic_pgadmin"
+pgadmin_email: "admin@icgroup.com"
+pgadmin_password: "admin_password"

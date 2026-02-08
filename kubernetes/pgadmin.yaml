@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: icgroup
+  labels:
+    env: prod
+data:
+  servers.json: |
+    {
+        "Servers": {
+            "1": {
+                "Name": "IC GROUP Odoo DB",
+                "Group": "Servers",
+                "Host": "odoo-db-service",
+                "Port": 5432,
+                "MaintenanceDB": "postgres",
+                "Username": "odoo",
+                "SSLMode": "prefer",
+                "Comment": "Connection automatique vers Odoo DB"
+            }
+        }
+    }
+---
+# Ressource H : Déploiement de PgAdmin
+# Resource H: PgAdmin deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+        env: prod
+    spec:
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4
+        ports:
+        - containerPort: 80
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: "admin@icgroup.com"
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: icgroup-secrets
+              key: pgadmin-password
+        - name: PGADMIN_CONFIG_SERVER_MODE
+          value: "False"
+        volumeMounts:
+        - name: pgadmin-servers
+          mountPath: /pgadmin4/servers.json
+          subPath: servers.json
+      volumes:
+      - name: pgadmin-servers
+        configMap:
+          name: pgadmin-config
+---
+# Ressource G : Service pour PgAdmin (ClusterIP)
+# Resource G: PgAdmin service (ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: pgadmin
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30050
+  type: NodePort

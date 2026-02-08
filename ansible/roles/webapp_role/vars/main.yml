@@ -1,0 +1,7 @@
+---
+# Variables pour la Web App
+# Variables for the Web App
+
+docker_image_name: "votre-login-docker/ic-webapp"
+app_version: "latest"
+container_name: "ic-webapp-prod"

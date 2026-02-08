@@ -1,0 +1,43 @@
+version: '3.5'
+
+# Définition des services pour Odoo et sa DB
+# Definition of services for Odoo and its DB
+
+services:
+  {{ service_name }}_db:
+    image: postgres:10
+    container_name: {{ db_container_name }}
+    environment:
+      - POSTGRES_USER={{ postgres_user }}
+      - POSTGRES_PASSWORD={{ postgres_password }}
+      - POSTGRES_DB={{ postgres_db }}
+    volumes:
+      - {{ docker_volume_name }}:/var/lib/postgresql/data
+    networks:
+      - {{ docker_network_name }}
+
+  {{ service_name }}_app:
+    image: odoo:{{ odoo_version }}
+    container_name: {{ app_container_name }}
+    depends_on:
+      - {{ service_name }}_db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST={{ db_container_name }}
+      - USER={{ postgres_user }}
+      - PASSWORD={{ postgres_password }}
+    networks:
+      - {{ docker_network_name }}
+
+networks:
+  {{ docker_network_name }}:
+    driver: bridge
+
+volumes:
+  {{ docker_volume_name }}:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '{{ local_mount_path }}'

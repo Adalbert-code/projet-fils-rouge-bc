@@ -1,0 +1,24 @@
+---
+# Tâches pour installer Odoo via Docker Compose
+# Tasks to install Odoo via Docker Compose
+
+- name: S'assurer que le répertoire de destination existe
+  # Ensure the destination directory exists
+  file:
+    path: "{{ local_mount_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Copier le template docker-compose
+  # Copy the docker-compose template
+  template:
+    src: docker-compose-odoo.yml.j2
+    dest: "/opt/{{ service_name }}_compose.yml"
+
+- name: Déployer Odoo avec Docker Compose
+  # Deploy Odoo with Docker Compose
+  docker_compose:
+    project_src: /opt
+    files:
+      - "{{ service_name }}_compose.yml"
+    state: present

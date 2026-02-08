@@ -1,0 +1,14 @@
+---
+# Variables variabilisées pour Odoo
+# Variabilized variables for Odoo
+
+docker_network_name: "odoo_network"
+docker_volume_name: "odoo_db_data"
+local_mount_path: "/var/lib/odoo"
+service_name: "odoo_app"
+db_container_name: "odoo_db"
+app_container_name: "odoo_instance"
+odoo_version: "13.0"
+postgres_user: "odoo"
+postgres_password: "odoo_password"
+postgres_db: "postgres"

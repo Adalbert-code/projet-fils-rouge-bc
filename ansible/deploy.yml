@@ -1,0 +1,18 @@
+---
+# Playbook principal de déploiement pour IC GROUP
+# Main deployment playbook for IC GROUP
+
+- name: Déploiement de l'infrastructure Odoo
+  # Deployment of Odoo infrastructure
+  hosts: odoo_servers
+  become: true
+  roles:
+    - odoo_role
+
+- name: Déploiement de la Web App et pgAdmin
+  # Deployment of Web App and pgAdmin
+  hosts: app_servers
+  become: true
+  roles:
+    - webapp_role
+    - pgadmin_role
